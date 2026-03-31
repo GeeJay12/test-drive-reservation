@@ -1,0 +1,33 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/postgres/Dockerfile
+    container_name: nevo-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:-change-me-superuser-password}
+      POSTGRES_DB: postgres
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256 --auth-local=scram-sha-256
+      POSTGRES_APP_DBO_PASSWORD: ${POSTGRES_DBO_PASSWORD:-change-me-dbo-password}
+      POSTGRES_APP_API_PASSWORD: ${POSTGRES_API_PASSWORD:-change-me-api-password}
+      POSTGRES_HEALTHCHECK_PASSWORD: ${POSTGRES_HEALTHCHECK_PASSWORD:-change-me-healthcheck-password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./apps/api/prisma/scripts/init.sql:/docker-entrypoint-initdb.d/10-init.sql:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "PGPASSWORD=$${POSTGRES_HEALTHCHECK_PASSWORD} psql -U nevo_health -d nevo -h 127.0.0.1 -c 'SELECT 1' >/dev/null",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  postgres_data:
