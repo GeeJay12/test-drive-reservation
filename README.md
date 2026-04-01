@@ -25,7 +25,8 @@ How do I optimise fair vehicle usage
   If we have used A, then its resale values drops more when compared to resale value of car B
   Plus I will use some statistical modelling to apply weights like color, number of owners, insurance lapse date etc
 
-Quick Question : Should I allocate the vehicle(choose between car A and B) when a reservation is made ?
+Quick Question : Should I allocate the vehicle(choose between car A and B) when a reservation is made or at some other point in time ?
+
 My Take: No. Ask me why during interview
 
 There are also other tech decisions like below which I can explain deatil when we meet

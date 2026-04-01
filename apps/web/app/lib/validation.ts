@@ -14,7 +14,7 @@ export const reservationFormSchema = z.object({
     })
     .refine((value) => {
       const selectedDateTime = new Date(value);
-      const startOfToday = new Date();
+      const startOfToday = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0));
       startOfToday.setHours(0, 0, 0, 0);
       const endDate = new Date(startOfToday);
       endDate.setDate(endDate.getDate() + 14);
@@ -28,8 +28,7 @@ export const reservationFormSchema = z.object({
     .max(60, "Duration cannot exceed 60 minutes."),
 });
 
-export function validateReservationForm(values: ReservationFormValues): string[] {
-  console.log("values", values);
+export function validateReservationForm(values: ReservationFormValues): string[] {  
   const result = reservationFormSchema.safeParse(values);
   if (result.success) {
     return [];

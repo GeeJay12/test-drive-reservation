@@ -2,20 +2,8 @@ import { Location } from "@prisma/client";
 import Joi from "joi";
 import type { AvailabilityRequestDto } from "../dto/availability.dto.js";
 import { ValidationError } from "../lib/errors.js";
+import { isWithinStartTimeWindow } from "../lib/time.js";
 
-function isWithinStartTimeWindow(value: Date, helpers: Joi.CustomHelpers): Date {
-  const startOfToday = new Date();
-  startOfToday.setUTCHours(0, 0, 0, 0);
-
-  const endDate = new Date(startOfToday);
-  endDate.setUTCDate(endDate.getUTCDate() + 14);
-
-  if (value.getTime() < startOfToday.getTime() || value.getTime() >= endDate.getTime()) {
-    return helpers.error("date.outOfWindow") as unknown as Date;
-  }
-
-  return value;
-}
 
 const availabilitySchema = Joi.object({
   location: Joi.string()

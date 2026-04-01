@@ -1,4 +1,5 @@
 import { WeekDay } from "@prisma/client";
+import Joi from "joi";
 
 const DAY_MAP: WeekDay[] = [
   WeekDay.SUN,
@@ -28,4 +29,15 @@ export function toUtcMinutesOfDay(input: Date): number {
 
 export function addMinutes(input: Date, minutes: number): Date {
   return new Date(input.getTime() + minutes * 60_000);
+}
+
+export function isWithinStartTimeWindow(value: Date, helpers: Joi.CustomHelpers): Date {
+  const startOfToday = new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0, 0));
+  const endDate = new Date(startOfToday);
+  endDate.setDate(startOfToday.getDate() + 14);
+  if (value.getTime() < startOfToday.getTime() || value.getTime() >= endDate.getTime()) {
+    return helpers.error("date.outOfWindow") as unknown as Date;
+  }
+
+  return value;
 }

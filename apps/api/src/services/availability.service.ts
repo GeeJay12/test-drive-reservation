@@ -9,7 +9,7 @@ export class AvailabilityService {
     private readonly reservationDao = new ReservationDao(),
   ) {}
 
-  async checkAvailability(input: AvailabilityRequestDto): Promise<AvailabilityResponseDto> {    
+  async checkAvailability(input: AvailabilityRequestDto): Promise<AvailabilityResponseDto> {     
     const weekDay = getWeekDay(input.startTime);
     const candidates = await this.vehicleDao.findCandidatesByModelLocationDay({
       model: input.model,
@@ -21,7 +21,7 @@ export class AvailabilityService {
     if (filteredCandidates.length === 0) {
       return { available: false, reason: "No candidate vehicle in operating window" };
     }
-    
+
     const reservations = await this.reservationDao.findBookedByModelLocationDate({
       model: input.model,
       location: input.location,

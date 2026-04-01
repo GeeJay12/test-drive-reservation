@@ -2,20 +2,7 @@ import { Location } from "@prisma/client";
 import Joi from "joi";
 import type { CompleteReservationRequestDto, CreateReservationRequestDto } from "../dto/reservation.dto.js";
 import { ValidationError } from "../lib/errors.js";
-
-function isWithinStartTimeWindow(value: Date, helpers: Joi.CustomHelpers): Date {
-  const startOfToday = new Date();
-  startOfToday.setUTCHours(0, 0, 0, 0);
-
-  const endDate = new Date(startOfToday);
-  endDate.setUTCDate(endDate.getUTCDate() + 14);
-
-  if (value.getTime() < startOfToday.getTime() || value.getTime() >= endDate.getTime()) {
-    return helpers.error("date.outOfWindow") as unknown as Date;
-  }
-
-  return value;
-}
+import { isWithinStartTimeWindow } from "../lib/time.js";
 
 const createReservationSchema = Joi.object({
   model: Joi.string().trim().min(1).required().messages({
