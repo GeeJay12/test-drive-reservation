@@ -2,8 +2,10 @@
   "name": "test-drive-reservation",
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build": "yarn workspace api build && yarn workspace api lint && yarn workspace api check-types && yarn workspace api test && yarn workspace web build && yarn workspace web lint && yarn workspace web check-types && yarn workspace web test",
+    "dev": "node ./scripts/db-bootstrap.mjs && node ./scripts/run-local-stack.mjs dev",
+    "start": "node ./scripts/db-bootstrap.mjs && yarn build && node ./scripts/run-local-stack.mjs start",
+    "clean": "docker compose down --remove-orphans --volumes && node ./scripts/clean.mjs",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
@@ -18,7 +20,6 @@
   },
   "packageManager": "yarn@4.12.0",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ]
 }
