@@ -5,12 +5,6 @@ node_modules
 .pnp
 .pnp.js
 
-# Local env files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # Testing
 coverage
@@ -26,7 +20,7 @@ coverage
 out/
 build
 dist
-
+*.tsbuildinfo
 
 # Debug
 npm-debug.log*
@@ -36,3 +30,15 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+reservations (2).json
+vehicles (2).json
+
+README copy.md
+
+scripts/*
+
+apps/api/prisma/task0-task1-review.md
+apps/api/prisma/task0-task1-decisions.md
+.cursorignore
+apps/api/prisma/requirement.md

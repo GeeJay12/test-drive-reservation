@@ -1,157 +1,49 @@
-# Turborepo starter
+You are here to understand the setup details, but take a minute to know why I made a few things in the way I did
+If you are too busy then you can look the setup details [here](local-setup.md)
 
-This Turborepo starter is maintained by the Turborepo core team.
+## Highlights
 
-## Using this example
+- I support making reservations even without making a availability check in first place
+- With the same query, I can serve query patterns like
+  -- When I choose a desired vehicle, location and time window, can you tell me which dates are available in next X days ?
+  -- My work is hectic I dont have a fixed window that I am available. Would you tell me the availability on
+  X, Y dates for Dublin location and Audi A8 car?
+  -- Give me the test drive bookings for today for a given location for showroom manager dashboard query
 
-Run the following command:
+## My Product Mindset
 
-```sh
-npx create-turbo@latest
-```
+How do I optimise fair vehicle usage
 
-## What's inside?
+- Strategy 1 (Simple): Plain round robbin allocation based upon driven count
+- Strategy 2 (Moderate): Get the km or miles driven for each test drive, so that I will allocate vehicle that is driven lesser kms
+- Strategy 3 (Superior): Although Strategy 2 looks cool on the face of it, here is the problem
+  Lets us say that we have two Tesla Model X, one with driven km of 2K kms and another with 8K kms
+  According to Strategy 2, the car with 2K will be allocated for test drive until it reaches 8K Kms of driving
+  But resale value on 2K driven car(A) is higher than 8K dirven car(B).
+  Using the car A for most test drives will inrease drastically the resale value
+  By this I mean, at the end of X test drives if the customers tootally drove 1K kms
+  If we have used A, then its resale values drops more when compared to resale value of car B
+  Plus I will use some statistical modelling to apply weights like color, number of owners, insurance lapse date etc
 
-This Turborepo includes the following packages/apps:
+Quick Question : Should I allocate the vehicle(choose between car A and B) when a reservation is made ?
+My Take: No. Ask me why during interview
 
-### Apps and Packages
+There are also other tech decisions like below which I can explain deatil when we meet
 
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- Choice of DB
+- Why \_version instead of Locks ?
+- Shard and Parition Pattern
+- Indexing and Constraints decision
+- Why my data is slightly denormalied ?
+- Bounded Time polciy [Start, End)
+- Optimisations during time window overlap check
+- PITR Data backup incase of fault
+- Master-Slave DB with sync
+- How to Scale when minimum rest time or avilability of vehicles changes post reservation ?
+- How do I monitor above said changes and notify for sure ?
+- Orechestation vs Choreography
+- and your questions too
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+# Lastly, how will I handle partiall vehicle unavailability like not available until 5 PM today.
 
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo build
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo build --filter=docs
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo dev
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters):
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo dev --filter=web
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed (recommended):
-
-```sh
-cd my-turborepo
-turbo login
-```
-
-Without global `turbo`, use your package manager:
-
-```sh
-cd my-turborepo
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-With [global `turbo`](https://turborepo.dev/docs/getting-started/installation#global-installation) installed:
-
-```sh
-turbo link
-```
-
-Without global `turbo`:
-
-```sh
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.dev/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.dev/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.dev/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.dev/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.dev/docs/reference/configuration)
-- [CLI Usage](https://turborepo.dev/docs/reference/command-line-reference)
+- Have slots, holiday table etc
