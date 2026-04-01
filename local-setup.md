@@ -1,11 +1,16 @@
 ## Background
 
 This repo is initialised with [Turborepo](https://turborepo.dev/) and yarn is set as the package manager.
-Since the entire infra and code lives in local and this is a PoC, I have committed the .env files for quick setup.
+Since the entire infra and code lives in local and this is a PoC, I have committed actual values in the .env.example files for quick setup.
 
 ## Pre-requisite
 
 Have Docker and Node installed in your system
+
+## Env file setup
+
+There are separate env files for frontend (apps/web/.env.example) and backend (apps/api/.env.example).
+Just rename them to .env
 
 ## Setup Backend
 
