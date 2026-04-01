@@ -8,18 +8,29 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "tsc --noEmitOnError",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint .",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prisma:generate": "prisma generate",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:deploy:dbo": "prisma migrate deploy",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "db:setup": "yarn prisma:generate && yarn prisma:migrate:deploy:dbo && yarn prisma:seed",
+    "test": "node -e \"console.log('Temporary API test placeholder: no tests yet')\""
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "joi": "^18.1.2",
     "pg": "^8.20.0"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",

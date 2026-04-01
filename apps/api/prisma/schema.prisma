@@ -4,10 +4,94 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Location {
+  ADAMSTOWN
+  ARTANE
+  ASHTOWN
+  ATHGOE
+}
+
+enum WeekDay {
+  SUN
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+}
+
+enum ReservationStatus {
+  BOOKED
+  CANCELLED
+  COMPLETED
+}
+
+enum IdempotencyStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+model Vehicle {
+  id            Int           @id @default(autoincrement())
+  model         String
+  location      Location
+  startTime     DateTime      @map("start_time")
+  endTime       DateTime      @map("end_time")
+  availableDays WeekDay[]     @map("available_days")
+  minGap        Int           @map("min_gap")
+  drivenCount   Int           @default(0) @map("driven_count")
+  version       Int           @default(1) @map("_version")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  reservations  Reservation[]
+
+  @@index([location, model])
+  @@index([location, model, drivenCount, id], map: "vehicles_location_model_driven_count_id_idx")
+  @@map("vehicles")
+}
+
+model Reservation {
+  id            BigInt            @id @default(autoincrement())
+  vehicleId     Int               @map("vehicle_id")
+  status        ReservationStatus @default(BOOKED)
+  model         String
+  location      Location
+  customerName  String            @map("customer_name")
+  customerEmail String            @map("customer_email")
+  customerPhone String            @map("customer_phone")
+  startTime     DateTime          @map("start_time")
+  endTime       DateTime          @map("end_time")
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([vehicleId, startTime, endTime], map: "reservations_vehicle_start_end_uniq")
+  @@index([location, model, startTime], map: "reservations_location_model_start_time_idx")
+  @@index([vehicleId, startTime], map: "reservations_vehicle_start_time_idx")
+  @@map("reservations")
+}
+
+model IdempotencyKey {
+  key               String             @id
+  requestFingerprint String            @map("request_fingerprint")
+  status            IdempotencyStatus  @default(IN_PROGRESS)
+  responseCode      Int?               @map("response_code")
+  responseBody      Json?              @map("response_body")
+  reservationId     BigInt?            @map("reservation_id")
+  expiresAt         DateTime           @map("expires_at")
+  createdAt         DateTime           @default(now()) @map("created_at")
+  updatedAt         DateTime           @updatedAt @map("updated_at")
+
+  @@index([expiresAt], map: "idempotency_keys_expires_at_idx")
+  @@map("idempotency_keys")
 }
