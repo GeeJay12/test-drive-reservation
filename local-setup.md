@@ -14,13 +14,13 @@ Just rename them to .env
 
 ## Setup Backend
 
-Step 1 : From the root dir of the repo, issue the following command to install npm packages from a terminal
+Step 1 : From the root dir of the repo, issue the following command to install npm packages from a terminal and to start the DB
 
 ```
 yarn && docker-compose up -d
 ```
 
-Step 2 : Navigate to `apps\api` and issue the below commands
+Step 2 : Navigate to `apps\api` and issue the below command
 
 ```
 yarn db:setup && yarn build && yarn start
