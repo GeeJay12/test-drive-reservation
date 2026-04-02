@@ -17,7 +17,9 @@
     "prisma:migrate:deploy:dbo": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
     "db:setup": "yarn prisma:generate && yarn prisma:migrate:deploy:dbo && yarn prisma:seed",
-    "test": "node -e \"console.log('Temporary API test placeholder: no tests yet')\""
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.6.0",
@@ -34,9 +36,13 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.0",
     "@types/pg": "^8.20.0",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "^4.1.2",
     "eslint": "^10.1.0",
     "prisma": "^7.6.0",
+    "supertest": "^7.0.0",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.2"
   }
 }
