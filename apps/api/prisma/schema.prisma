@@ -34,12 +34,6 @@ enum ReservationStatus {
   COMPLETED
 }
 
-enum IdempotencyStatus {
-  IN_PROGRESS
-  COMPLETED
-  FAILED
-}
-
 model Vehicle {
   id            Int           @id @default(autoincrement())
   model         String
@@ -79,19 +73,4 @@ model Reservation {
   @@index([location, model, startTime], map: "reservations_location_model_start_time_idx")
   @@index([vehicleId, startTime], map: "reservations_vehicle_start_time_idx")
   @@map("reservations")
-}
-
-model IdempotencyKey {
-  key               String             @id
-  requestFingerprint String            @map("request_fingerprint")
-  status            IdempotencyStatus  @default(IN_PROGRESS)
-  responseCode      Int?               @map("response_code")
-  responseBody      Json?              @map("response_body")
-  reservationId     BigInt?            @map("reservation_id")
-  expiresAt         DateTime           @map("expires_at")
-  createdAt         DateTime           @default(now()) @map("created_at")
-  updatedAt         DateTime           @updatedAt @map("updated_at")
-
-  @@index([expiresAt], map: "idempotency_keys_expires_at_idx")
-  @@map("idempotency_keys")
 }

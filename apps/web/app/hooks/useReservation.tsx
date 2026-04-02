@@ -32,13 +32,6 @@ function getInitialDateTimeLocal(): string {
   return local.toISOString().slice(0, 16);
 }
 
-function createIdempotencyKey(): string {
-  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-    return crypto.randomUUID();
-  }
-  return `tdr-${Date.now()}`;
-}
-
 function formSnapshotKey(values: ReservationFormValues): string {
   return `${values.location}|${values.model}|${values.startDateTime}|${values.durationMinutes}`;
 }
@@ -133,7 +126,7 @@ export function TestDriveReservationProvider({
 
     try {
       const payload = buildReservationPayload(formValues);
-      const response = await createReservationApi(payload, createIdempotencyKey());
+      const response = await createReservationApi(payload);
       setReservation(response);
       setReserveStatus("success");
       setFeedbackMessage("Reservation created successfully.");

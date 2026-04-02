@@ -14,7 +14,6 @@ function utcDate(iso: string): Date {
 }
 
 async function main(): Promise<void> {
-  await prisma.idempotencyKey.deleteMany();
   await prisma.reservation.deleteMany();
   await prisma.vehicle.deleteMany();
 

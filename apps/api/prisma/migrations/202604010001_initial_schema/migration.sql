@@ -1,7 +1,6 @@
 CREATE TYPE "Location" AS ENUM ('ADAMSTOWN', 'ARTANE', 'ASHTOWN', 'ATHGOE');
 CREATE TYPE "WeekDay" AS ENUM ('SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT');
 CREATE TYPE "ReservationStatus" AS ENUM ('BOOKED', 'CANCELLED', 'COMPLETED');
-CREATE TYPE "IdempotencyStatus" AS ENUM ('IN_PROGRESS', 'COMPLETED', 'FAILED');
 
 CREATE TABLE "vehicles" (
   "id" SERIAL NOT NULL,
@@ -41,28 +40,12 @@ CREATE TABLE "reservations" (
   CONSTRAINT "reservations_vehicle_fkey" FOREIGN KEY ("vehicle_id") REFERENCES "vehicles" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
-CREATE TABLE "idempotency_keys" (
-  "key" TEXT NOT NULL,
-  "request_fingerprint" TEXT NOT NULL,
-  "status" "IdempotencyStatus" NOT NULL DEFAULT 'IN_PROGRESS',
-  "response_code" INTEGER,
-  "response_body" JSONB,
-  "reservation_id" BIGINT,
-  "expires_at" TIMESTAMPTZ NOT NULL,
-  "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT "idempotency_keys_pkey" PRIMARY KEY ("key"),
-  CONSTRAINT "idempotency_keys_expires_at_ck" CHECK ("expires_at" > "created_at")
-);
-
 CREATE INDEX "vehicles_location_model_idx" ON "vehicles" ("location", "model");
 CREATE INDEX "vehicles_location_model_driven_count_id_idx" ON "vehicles" ("location", "model", "driven_count", "id");
 
 CREATE INDEX "reservations_location_model_start_time_idx" ON "reservations" ("location", "model", "start_time");
 CREATE INDEX "reservations_vehicle_start_time_idx" ON "reservations" ("vehicle_id", "start_time");
 CREATE INDEX "reservations_status_start_time_idx" ON "reservations" ("status", "start_time");
-
-CREATE INDEX "idempotency_keys_expires_at_idx" ON "idempotency_keys" ("expires_at");
 
 -- Partition automation scaffolding for reservations with 14-day windows.
 -- The table remains compatible with Prisma schema even if partman setup is unavailable.
