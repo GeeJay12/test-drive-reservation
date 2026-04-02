@@ -6,19 +6,19 @@ If you are too busy then you can look the setup details [here](local-setup.md)
 
 - I support making reservations even without making a availability check in first place
 - With the same query, I can serve query patterns like
-- 
+
   -- When I choose a desired vehicle, location and time window, can you tell me which dates are available in next X days ?
   
   -- My work is hectic I dont have a fixed window that I am available. Would you tell me the availability on
-  X, Y dates for Dublin location and Audi A8 car?
+  X, Y dates(along with time and duration) for Dublin location and Audi A8 car?
   
-  -- Give me the test drive bookings for today for a given location for showroom manager dashboard query
+  -- (schema support) Give me the test drive bookings for today for a given location for showroom manager dashboard query
 
 ## My Product Mindset
 
 How do I optimise fair vehicle usage
 
-- Strategy 1 (Simple): Plain round robbin allocation based upon driven count
+- Strategy 1 (Simple): Plain round robbin allocation based upon driven count provided this vehcile is available
 - Strategy 2 (Moderate - Cost Optimisation): Get the km or miles driven for each test drive, so that I will allocate vehicle that is driven lesser kms
 - Strategy 3 (Superior - Cost Optimisation): Although Strategy 2 looks cool on the face of it, here is the problem
 
@@ -36,7 +36,7 @@ How do I optimise fair vehicle usage
   
   Plus I will use some statistical modelling to apply weights like color, number of owners, insurance lapse date etc.
 
-### Quick Question : Should I allocate the vehicle(choose between car A and B) when a reservation is made or at some other point in time ?
+### Quick Question : Should I allocate the vehicle(choose between car A and B of same model that are available in the given location) when a reservation is made or at some other point in time ?
 
 My Take: Not during reservation booking. Ask me why during interview.
 
