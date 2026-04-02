@@ -10,6 +10,18 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
     include: ["app/**/*.test.ts", "app/**/*.test.tsx"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json-summary", "html"],
+      reportsDirectory: "./coverage",
+      include: ["app/**/*.{ts,tsx}"],
+      exclude: [
+        "app/**/*.test.ts",
+        "app/**/*.test.tsx",
+        "**/types/**",
+        "app/**/layout.tsx",
+      ],
+    },
   },
   resolve: {
     alias: {
